@@ -1,7 +1,5 @@
-// @TODO: YOUR CODE HERE!
-// 113 lines (93 sloc)  3.2 KB
-    
-let svgWidth = 960;
+// D3 Times
+let svgWidth= 960;
 let svgHeight = 500;
 
 let margin = { top: 20, right: 40, bottom: 60, left: 100 };
@@ -9,8 +7,8 @@ let margin = { top: 20, right: 40, bottom: 60, left: 100 };
 let width = svgWidth - margin.left - margin.right;
 let height = svgHeight - margin.top - margin.bottom;
 
-// Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-let svg = d3.select(".chart")
+// Create an SVG wrapper, append an SVG group that will hold our chart
+let svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight)
@@ -19,17 +17,14 @@ let svg = d3.select(".chart")
 
 let chart = svg.append("g");
 
-// Append a div to the body to create tooltips, assign it a class
-d3.select(".chart")
+// Append a div to the body, assign it a class
+d3.select("#scatter")
   .append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
-d3.csv("Data.csv", function(err, Data) {
-  if (err) throw err;
-
+d3.csv("../StarterCode/assets/data/data.csv").then(function(Data) {
   Data.forEach(function(data) {
-    // data.num_hits = +data.num_hits;
     data.poverty = +data.poverty;
     data.healthcare = +data.healthcare;
   });
@@ -53,7 +48,8 @@ d3.csv("Data.csv", function(err, Data) {
     return +data.healthcare * 1.2;
   })]);
 
-  let toolTip = d3.tip()
+  let toolTip = d3
+    .tip()
     .attr("class", "tooltip")
     .offset([80, -60])
     .html(function(data) {
@@ -63,7 +59,7 @@ d3.csv("Data.csv", function(err, Data) {
       return (abbrName + "<br> Poverty Rate: " + povertyRate + "<br> Lacks Healthcare: " + lacksHealthcare);
     });
 
-  chart.call(toolTip);
+  svg.call(toolTip);
 
   let elem = chart.append("g").selectAll("g")
     .data(Data)
